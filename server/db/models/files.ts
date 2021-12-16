@@ -1,4 +1,5 @@
 import {
+  AllowNull,
     BelongsTo,
     Column,
     DataType,
@@ -6,6 +7,7 @@ import {
     Model,
     Table,
   } from "sequelize-typescript";
+import { STRING } from "sequelize/types";
 import { Patient } from "./patient";
 import { Series } from "./series";
 import { Studies } from "./studies";
@@ -28,16 +30,28 @@ import { Studies } from "./studies";
       allowNull: false,
       type: DataType.STRING,
     })
-    filePath!: string;
+    file_path!: string;
+
+    @Column({
+      allowNull: false,
+      type: DataType.DATE,
+    })
+    created_date!: Date;
   
     @ForeignKey(() => Patient)
-    patientId!: string;
-  
+    @AllowNull
+    @Column
+    patient_id!: string;
+
     @ForeignKey(() => Studies)
-    studyId!: string;
-  
+    @AllowNull
+    @Column
+    study_id!: string;
+    
     @ForeignKey(() => Series)
-    serieID!: string;
+    @AllowNull
+    @Column
+    series_id!: string;
   
     @BelongsTo(() => Patient)
     patient!: Patient;
