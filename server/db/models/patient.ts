@@ -24,7 +24,7 @@ import { StudiesPatient } from "./StudiesPatient";
       primaryKey: true,
       type: DataType.INTEGER.UNSIGNED,
     })
-    id!: string;
+    id!: number;
   
     @Column({
       allowNull: false,

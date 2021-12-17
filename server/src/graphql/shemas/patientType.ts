@@ -12,7 +12,7 @@ const patientType = gql`
   }
   type Mutation {
     createPatient( name: String!, created_date: String!) : Patient!
-    updatePatient( id: String!, name: String!, created_date: String!) : Int!
+    updatePatient( id: Int!, name: String!, created_date: String!) : Int!
   }
 `;
 
