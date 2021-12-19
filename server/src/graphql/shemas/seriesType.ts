@@ -1,4 +1,3 @@
-
 const { gql } = require("apollo-server-express")
 
 const seriesType = gql`
@@ -6,8 +5,6 @@ const seriesType = gql`
   id: ID!
   series_name: String!
   created_date: String!
-  patient: [Patient!]!
-  studies: [Studies!]!
   modality: Modality!
   }
   type Query {
