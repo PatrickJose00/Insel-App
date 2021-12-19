@@ -98,5 +98,9 @@ h1, h2 {
   margin-left: 10%
 }
 
+.filterSeries {
+  display: "flex";
+}
+
 
 

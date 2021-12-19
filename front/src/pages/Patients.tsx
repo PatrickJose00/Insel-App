@@ -11,9 +11,8 @@ import { useMutation, useQuery } from "@apollo/react-hooks";
 import { useState } from "react";
 import FormDialog from "../components/FormDialog";
 import TextFormField from "../components/TextFieldForm";
-import { getPatients, updatePatientMutation } from "../querys/patient/querys"
-import Moment from 'moment';
-
+import { getPatients, updatePatientMutation } from "../querys/patient/querys";
+import Moment from "moment";
 
 interface Patient {
   id: string;
@@ -26,24 +25,29 @@ interface QueryData {
 }
 
 function PatientFunction() {
-
   useState();
 
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedRow, setSelectedRow] = useState({} as Patient);
 
-  const [updatePatient] = useMutation<{ updatePatient: Patient }, {updatePatientId: number, name: string, createdDate: string}>(
-    updatePatientMutation
-  );
-
+  const [updatePatient] = useMutation<
+    { updatePatient: Patient },
+    { updatePatientId: number; name: string; createdDate: string }
+  >(updatePatientMutation);
 
   function handleCancel() {
     setIsOpen(false);
   }
 
   async function handleSubmit() {
-    let payload = {variables: {updatePatientId: parseInt(selectedRow.id), name: selectedRow.name, createdDate: new Date(parseInt(selectedRow.created_date)).toUTCString()}}
+    let payload = {
+      variables: {
+        updatePatientId: parseInt(selectedRow.id),
+        name: selectedRow.name,
+        createdDate: new Date(parseInt(selectedRow.created_date)).toUTCString(),
+      },
+    };
     await updatePatient(payload);
     refetch();
     setIsOpen(false);
@@ -51,16 +55,24 @@ function PatientFunction() {
 
   const handleDialogOpen = (selected: any) => {
     setSelectedRow(selected);
-    setIsOpen(true)
+    setIsOpen(true);
   };
 
   const handleNameChanged = (name: any) => {
-    setSelectedRow({id: selectedRow.id, name, created_date: selectedRow.created_date})
-  }
+    setSelectedRow({
+      id: selectedRow.id,
+      name,
+      created_date: selectedRow.created_date,
+    });
+  };
 
   const handleDateChanged = (created_date: any) => {
-    setSelectedRow({id: selectedRow.id, name: selectedRow.name, created_date: Moment(created_date).valueOf().toString()})
-  }
+    setSelectedRow({
+      id: selectedRow.id,
+      name: selectedRow.name,
+      created_date: Moment(created_date).valueOf().toString(),
+    });
+  };
 
   const { loading, error, data, refetch } = useQuery<QueryData>(getPatients);
 
@@ -111,10 +123,15 @@ function PatientFunction() {
                     {patient.name}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {Moment(parseInt(patient.created_date)).format("DD-MM-yyyy")}
+                    {Moment(parseInt(patient.created_date)).format(
+                      "DD-MM-yyyy"
+                    )}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    <Button className="btn" onClick={() => handleDialogOpen(patient)}>
+                    <Button
+                      className="btn"
+                      onClick={() => handleDialogOpen(patient)}
+                    >
                       Update
                     </Button>
                   </StyledTableCell>
@@ -133,19 +150,27 @@ function PatientFunction() {
             titleButtonRight="Update"
             handleCancel={handleCancel}
             handleUpdate={handleSubmit}
-            >
+          >
             <div>
-              <TextFormField id="name" label="name" type="text" value={selectedRow.name} onChange = {
-                (e: any) => {
+              <TextFormField
+                id="name"
+                label="name"
+                type="text"
+                value={selectedRow.name}
+                onChange={(e: any) => {
                   handleNameChanged(e.target.value);
-                }
-              } />
-              <TextFormField id="created_date" label="created_date" type="Date" value={Moment(parseInt(selectedRow.created_date)).format("yyyy-MM-DD")}
-              onChange = {
-                (e: any) => {
+                }}
+              />
+              <TextFormField
+                id="created_date"
+                label="created_date"
+                type="Date"
+                value={Moment(parseInt(selectedRow.created_date)).format(
+                  "yyyy-MM-DD"
+                )}
+                onChange={(e: any) => {
                   handleDateChanged(e.target.value);
-                }
-              }
+                }}
               />
             </div>
           </FormDialog>

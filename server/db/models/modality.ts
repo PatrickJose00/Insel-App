@@ -1,9 +1,11 @@
 import {
     Column,
     DataType,
+    HasMany,
     Model,
     Table,
   } from "sequelize-typescript";
+import Series from "./series"
 
 @Table({
     paranoid: true,
@@ -24,6 +26,9 @@ import {
       type: DataType.STRING,
     })
     name!: string;
+
+    @HasMany(() => Series)
+    series!: Series[];
   }
 
   export default Modality

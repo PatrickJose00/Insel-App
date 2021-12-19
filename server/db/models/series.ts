@@ -1,12 +1,15 @@
 import {
+  BelongsTo,
     BelongsToMany,
     Column,
     DataType,
+    ForeignKey,
     HasMany,
     Model,
     Table,
   } from "sequelize-typescript";
 import { Files } from "./files";
+import Modality from "./modality";
 import { Patient } from "./patient";
 import SeriesPatient from "./SeriesPatient";
 import SeriesStudies from "./SeriesStudies";
@@ -37,6 +40,12 @@ import { Studies } from "./studies";
       type: DataType.STRING,
     })
     created_date!: string;
+
+    @ForeignKey(() => Modality)
+    modality_id!: string;
+
+    @BelongsTo(() => Modality)
+    modality!: Modality;
   
     @BelongsToMany(() => Patient, () => SeriesPatient)
     patient!: Patient[];

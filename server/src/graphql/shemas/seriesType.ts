@@ -8,9 +8,11 @@ const seriesType = gql`
   created_date: String!
   patient: [Patient!]!
   studies: [Studies!]!
+  modality: Modality!
   }
   type Query {
-    series: [Series!]!
+    seriesQuery: [Series!]!
+    findSeriesByModalityNameAndDate(name: String, startedDate:String, endDate:String): [Series!]!
   }
 `;
 
