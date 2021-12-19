@@ -6,10 +6,15 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation } from "@apollo/react-hooks";
 import { useState } from "react";
-import { getStudies } from "../querys/studies/studies";
+import { getStudies, createStudyMutation } from "../querys/studies/studies";
 import Moment from "moment";
+import Button from '@mui/material/Button';
+import TextFormField from "../components/TextFieldForm";
+import FormDialog from "../components/FormDialog";
+import { useStyles } from "./material-ui-css/styles";
+
 
 interface Studies {
   id: string;
@@ -25,9 +30,55 @@ function StudiesFunction() {
 
   useState();
 
-  const { loading, error, data } = useQuery<QueryData>(getStudies);
+  const classes = useStyles();
 
-  console.log(data)
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { loading, error, data, refetch } = useQuery<QueryData>(getStudies);
+
+  const [selectedRow, setSelectedRow] = useState({} as Studies);
+
+  function handleCancel() {
+    setIsOpen(false);
+  }
+
+  const handleDialogOpen = () => {
+    setIsOpen(true);
+  };
+
+  const [createStudy] = useMutation<
+    { createStudy: Studies },
+    { studyName: string; createdDate: string }
+  >(createStudyMutation);
+
+  async function handleSubmit() {
+    await createStudy({
+      variables: {
+        studyName: selectedRow.study_name,
+        createdDate: Moment(parseInt(selectedRow.created_date)).format(
+          "yyyy-MM-DD"
+        ),
+      },
+    });
+    refetch();
+    setIsOpen(false);
+  }
+
+  const handleNameChanged = (study_name: any) => {
+    setSelectedRow({
+      id: selectedRow.id,
+      study_name,
+      created_date: selectedRow.created_date,
+    });
+  };
+
+  const handleDateChanged = (created_date: any) => {
+    setSelectedRow({
+      id: selectedRow.id,
+      study_name: selectedRow.study_name,
+      created_date: Moment(created_date).valueOf().toString(),
+    });
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
@@ -54,7 +105,17 @@ function StudiesFunction() {
 
   return (
     <div>
-      <h1>Studies</h1>
+      <div className={classes.divFlexFloatLeft}>
+        <h1>Studies</h1>
+      </div>
+      <div className={classes.divFlexFloatRight}>
+      <Button
+          variant="contained"
+          onClick={() => handleDialogOpen()}
+        >
+          Create
+        </Button>
+      </div>
       <TableContainer component={Paper}>
         <Table aria-label="customized table">
           <TableHead>
@@ -75,15 +136,48 @@ function StudiesFunction() {
                     {study.study_name}
                   </StyledTableCell>
                   <StyledTableCell align="right">
-                    {Moment(parseInt(study.created_date)).format(
-                      "DD-MM-yyyy"
-                    )}
+                    {Moment(parseInt(study.created_date)).format("DD-MM-yyyy")}
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <div>
+        {isOpen && (
+          <FormDialog
+            title="Create Study"
+            open={isOpen}
+            titleButtonLeft="Cancel"
+            titleButtonRight="Create"
+            handleCancel={handleCancel}
+            handleUpdate={handleSubmit}
+          >
+            <div>
+              <TextFormField
+                id="name"
+                label="name"
+                type="text"
+                value={selectedRow.study_name}
+                onChange={(e: any) => {
+                  handleNameChanged(e.target.value);
+                }}
+              />
+              <TextFormField
+                id="created_date"
+                label="created_date"
+                type="Date"
+                value={Moment(parseInt(selectedRow.created_date)).format(
+                  "yyyy-MM-DD"
+                )}
+                onChange={(e: any) => {
+                  handleDateChanged(e.target.value);
+                }}
+              />
+            </div>
+          </FormDialog>
+        )}
+      </div>
     </div>
   );
 }

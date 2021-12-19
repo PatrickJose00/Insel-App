@@ -6,7 +6,21 @@ const useStyles = makeStyles(() => ({
     paddingRight: "79px",
     paddingLeft: "118px",
   },
-  
+  divFlexFloatLeft: {
+    display: "flex",
+    float: "left",
+  },
+  divFlexFloatRight: {
+    display: "flex",
+    float: "right",
+  },
+  buttonCreateMargin : {
+    marginRight: "14px"
+  },
+  seriesInputes: {
+    display: "flex",
+  }
+
 }));
 
 export { useStyles };

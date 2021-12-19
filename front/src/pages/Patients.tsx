@@ -45,7 +45,8 @@ function PatientFunction() {
       variables: {
         updatePatientId: parseInt(selectedRow.id),
         name: selectedRow.name,
-        createdDate: new Date(parseInt(selectedRow.created_date)).toUTCString(),
+        createdDate: Moment(parseInt(selectedRow.created_date)).format(
+          "yyyy-MM-DD"),
       },
     };
     await updatePatient(payload);

@@ -11,6 +11,9 @@ const studiesType = gql`
   type Query {
     studies: [Studies!]!
   }
+  type Mutation {
+    createStudy(study_name: String!, created_date: String!) : Studies!
+  }
 `;
 
 export default studiesType;

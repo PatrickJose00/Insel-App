@@ -6,13 +6,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import Button from "@material-ui/core/Button";
+import Button from "@mui/material/Button";
 import { useQuery } from "@apollo/react-hooks";
 import { useState } from "react";
 import { getSeries, filterSeries } from "../querys/series/series";
 import Moment from "moment";
 import TextFormField from "../components/TextFieldForm";
-import { refType } from "@mui/utils";
+import { useStyles } from "./material-ui-css/styles";
 
 interface Series {
   id: string;
@@ -31,6 +31,8 @@ interface QueryFilterData {
 
 function SeriesFunction() {
   useState();
+
+  const classes = useStyles();
 
   let { loading, error, data, refetch } = useQuery<QueryData>(getSeries);
   const [renderData, setRenderData] = useState(data?.seriesQuery);
@@ -84,9 +86,33 @@ function SeriesFunction() {
 
   return (
     <div>
-      <h1>Series</h1>
+      <div className={classes.divFlexFloatLeft}>
+        <h1>Series</h1>
+      </div>
+      <div>
+        <div className={classes.divFlexFloatRight}>
+          <Button
+            variant="contained"
+            color="success"
+            style={{marginRight:10}}
+            onClick={() => HandleFilterChanged()}
+          >
+            Search
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={async () => {
+              let res = await refetch();
+              setRenderData(res.data.seriesQuery);
+            }}
+          >
+            Reset
+          </Button>
+        </div>
+      </div>
       <TableContainer component={Paper}>
-        <div style={{ display: "flex", height: "9%" }}>
+        <div className={classes.seriesInputes}>
           <TextFormField
             id="Modality"
             label="Modality"
@@ -112,22 +138,6 @@ function SeriesFunction() {
             }}
           />
         </div>
-        <Button
-          className="btn"
-          color="primary"
-          onClick={() => HandleFilterChanged()}
-        >
-          Search
-        </Button>
-        <Button
-          className="btn"
-          onClick={async () => {
-            let res = await refetch();
-            setRenderData(res.data.seriesQuery);
-          }}
-        >
-          Reset
-        </Button>
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
