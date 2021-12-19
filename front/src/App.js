@@ -14,10 +14,10 @@ function App() {
         <MainNavigation/>
         <Routes>
           <Route path="/" exact element={<Home />} />
-          <Route exact path="/studies" element={<Studies />} />
-          <Route exact path="/patients" element={<Patients />} />
-          <Route exact path="/series" element={<Series />} />
-          <Route exact path="/modalities" element={<Modalities />} />
+          <Route path="/studies" element={<Studies />} />
+          <Route path="/patients" element={<Patients />} />
+          <Route path="/series" element={<Series />} />
+          <Route path="/modalities" element={<Modalities />} />
         </Routes>
    
     </div>

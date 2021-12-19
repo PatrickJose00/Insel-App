@@ -130,6 +130,7 @@ function PatientFunction() {
                   <StyledTableCell align="right">
                     <Button
                       className="btn"
+                      color="primary"
                       onClick={() => handleDialogOpen(patient)}
                     >
                       Update

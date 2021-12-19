@@ -6,6 +6,7 @@ const useStyles = makeStyles(() => ({
     paddingRight: "79px",
     paddingLeft: "118px",
   },
+  
 }));
 
 export { useStyles };

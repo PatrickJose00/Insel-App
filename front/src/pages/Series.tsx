@@ -7,11 +7,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@material-ui/core/Button";
-import { useQuery, useLazyQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 import { useState } from "react";
 import { getSeries, filterSeries } from "../querys/series/series";
 import Moment from "moment";
 import TextFormField from "../components/TextFieldForm";
+import { refType } from "@mui/utils";
 
 interface Series {
   id: string;
@@ -28,16 +29,22 @@ interface QueryFilterData {
   findSeriesByModalityNameAndDate: Series[];
 }
 
-function PatientFunction() {
+function SeriesFunction() {
   useState();
+
   let { loading, error, data, refetch } = useQuery<QueryData>(getSeries);
-  let filterResult = useQuery<QueryFilterData>(filterSeries, {
-    variables: { name: "", startedDate: "", endDate: "" },
-  });
+  const [renderData, setRenderData] = useState(data?.seriesQuery);
+
+  function getData() {
+    if (renderData === undefined) {
+      setRenderData(data?.seriesQuery);
+    }
+    return renderData;
+  }
+
   const [modalityNameState, setModalityName] = useState("");
   const [startDateState, setStartDate] = useState("");
   const [endDateState, setEndDate] = useState("");
-  const [renderData, setRenderData] = useState(data?.seriesQuery);
 
   async function HandleFilterChanged() {
     let res = await filterResult.refetch({
@@ -47,6 +54,10 @@ function PatientFunction() {
     });
     setRenderData(res.data?.findSeriesByModalityNameAndDate);
   }
+
+  let filterResult = useQuery<QueryFilterData>(filterSeries, {
+    variables: { name: "", startedDate: "", endDate: "" },
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error...</p>;
@@ -77,9 +88,9 @@ function PatientFunction() {
       <TableContainer component={Paper}>
         <div style={{ display: "flex", height: "9%" }}>
           <TextFormField
-            id="standard-basic"
-            label="Standard"
-            variant="standard"
+            id="Modality"
+            label="Modality"
+            type="text"
             onChange={(e: any) => {
               setModalityName(e.target.value);
             }}
@@ -101,7 +112,11 @@ function PatientFunction() {
             }}
           />
         </div>
-        <Button className="btn" onClick={() => HandleFilterChanged()}>
+        <Button
+          className="btn"
+          color="primary"
+          onClick={() => HandleFilterChanged()}
+        >
           Search
         </Button>
         <Button
@@ -123,23 +138,22 @@ function PatientFunction() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {renderData &&
-              renderData.map((series) => (
-                <StyledTableRow key={series.id}>
-                  <StyledTableCell component="th" scope="row">
-                    {series.id}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {series.series_name}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {Moment(parseInt(series.created_date)).format("DD-MM-yyyy")}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {series.modality.name}
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
+            {getData()?.map((series) => (
+              <StyledTableRow key={series.id}>
+                <StyledTableCell component="th" scope="row">
+                  {series.id}
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  {series.series_name}
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  {Moment(parseInt(series.created_date)).format("DD-MM-yyyy")}
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  {series.modality.name}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -147,4 +161,4 @@ function PatientFunction() {
   );
 }
 
-export default PatientFunction;
+export default SeriesFunction;
