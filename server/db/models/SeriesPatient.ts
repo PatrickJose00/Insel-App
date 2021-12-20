@@ -6,7 +6,6 @@ import {
   } from "sequelize-typescript";
 import { Patient } from "./patient";
 import { Series } from "./series";
-import { SeriesStudies } from "./SeriesStudies";
   
 
 @Table({

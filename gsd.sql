@@ -11,7 +11,7 @@
  Target Server Version : 50720
  File Encoding         : 65001
 
- Date: 16/12/2021 19:00:32
+ Date: 20/12/2021 01:13:13
 */
 
 SET NAMES utf8mb4;
@@ -37,7 +37,7 @@ INSERT INTO `SequelizeMeta` VALUES ('202112111923-create-studiesPatient.js');
 INSERT INTO `SequelizeMeta` VALUES ('202112111929-create-series.js');
 INSERT INTO `SequelizeMeta` VALUES ('202112111937-create-files.js');
 INSERT INTO `SequelizeMeta` VALUES ('202112111938-create-seriesStudies.js');
-INSERT INTO `SequelizeMeta` VALUES ('202112111939-create-seriesPatient.js');
+INSERT INTO `SequelizeMeta` VALUES ('202112112111-create-seriesPatient.js');
 
 -- ----------------------------
 -- Table structure for SeriesPatient
@@ -49,7 +49,7 @@ CREATE TABLE `SeriesPatient`  (
   INDEX `series_id`(`series_id`) USING BTREE,
   INDEX `patient_id`(`patient_id`) USING BTREE,
   CONSTRAINT `SeriesPatient_ibfk_1` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `SeriesPatient_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `studies` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `SeriesPatient_ibfk_2` FOREIGN KEY (`patient_id`) REFERENCES `patient` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -76,10 +76,9 @@ CREATE TABLE `SeriesStudies`  (
 -- ----------------------------
 -- Records of SeriesStudies
 -- ----------------------------
-INSERT INTO `SeriesStudies` VALUES (1, 1);
 INSERT INTO `SeriesStudies` VALUES (1, 2);
-INSERT INTO `SeriesStudies` VALUES (2, 1);
 INSERT INTO `SeriesStudies` VALUES (2, 2);
+INSERT INTO `SeriesStudies` VALUES (3, 2);
 
 -- ----------------------------
 -- Table structure for StudiesPatient
@@ -97,10 +96,10 @@ CREATE TABLE `StudiesPatient`  (
 -- ----------------------------
 -- Records of StudiesPatient
 -- ----------------------------
-INSERT INTO `StudiesPatient` VALUES (1, 1);
-INSERT INTO `StudiesPatient` VALUES (1, 2);
-INSERT INTO `StudiesPatient` VALUES (2, 1);
 INSERT INTO `StudiesPatient` VALUES (2, 2);
+INSERT INTO `StudiesPatient` VALUES (2, 3);
+INSERT INTO `StudiesPatient` VALUES (3, 2);
+INSERT INTO `StudiesPatient` VALUES (3, 3);
 
 -- ----------------------------
 -- Table structure for files
@@ -120,17 +119,13 @@ CREATE TABLE `files`  (
   CONSTRAINT `files_ibfk_1` FOREIGN KEY (`patient_id`) REFERENCES `patient` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `files_ibfk_2` FOREIGN KEY (`study_id`) REFERENCES `studies` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `files_ibfk_3` FOREIGN KEY (`series_id`) REFERENCES `series` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of files
 -- ----------------------------
-INSERT INTO `files` VALUES (1, 1, NULL, NULL, 'path one ', '2021-12-13 23:13:30');
-INSERT INTO `files` VALUES (2, 1, NULL, NULL, 'path two', '2021-12-13 23:13:41');
-INSERT INTO `files` VALUES (3, NULL, 2, NULL, 'path three', '2021-12-15 23:13:55');
-INSERT INTO `files` VALUES (4, NULL, 2, NULL, 'path four ', '2021-12-17 23:14:08');
-INSERT INTO `files` VALUES (5, NULL, NULL, 2, 'path five ', '2021-12-20 23:14:28');
-INSERT INTO `files` VALUES (6, NULL, NULL, 1, 'path six ', '2021-12-23 23:14:42');
+INSERT INTO `files` VALUES (1, 1, NULL, NULL, 'path 1', '2021-12-20 01:11:46');
+INSERT INTO `files` VALUES (2, NULL, NULL, 1, 'path 2', '2021-12-21 01:11:58');
 
 -- ----------------------------
 -- Table structure for modality
@@ -140,15 +135,14 @@ CREATE TABLE `modality`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of modality
 -- ----------------------------
-INSERT INTO `modality` VALUES (1, 'Modality One');
-INSERT INTO `modality` VALUES (2, 'Modality Two');
-INSERT INTO `modality` VALUES (3, 'Modality Three');
-INSERT INTO `modality` VALUES (4, 'Modality Four');
+INSERT INTO `modality` VALUES (1, 'Modality one');
+INSERT INTO `modality` VALUES (2, 'Modality two');
+INSERT INTO `modality` VALUES (3, 'Modality three');
 
 -- ----------------------------
 -- Table structure for patient
@@ -159,13 +153,14 @@ CREATE TABLE `patient`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `created_date` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of patient
 -- ----------------------------
-INSERT INTO `patient` VALUES (1, 'Patient One', '2021-12-15 23:09:57');
-INSERT INTO `patient` VALUES (2, 'Patient Two', '2021-12-16 23:10:05');
+INSERT INTO `patient` VALUES (1, 'Patient one', '2021-12-20 01:08:22');
+INSERT INTO `patient` VALUES (2, 'Patient two', '2021-12-20 01:08:31');
+INSERT INTO `patient` VALUES (3, 'Patient three', '2021-12-20 01:09:30');
 
 -- ----------------------------
 -- Table structure for series
@@ -179,16 +174,15 @@ CREATE TABLE `series`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `modality_id`(`modality_id`) USING BTREE,
   CONSTRAINT `series_ibfk_1` FOREIGN KEY (`modality_id`) REFERENCES `modality` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of series
 -- ----------------------------
-INSERT INTO `series` VALUES (1, 'Series One', '2021-12-15 23:11:54', 1);
-INSERT INTO `series` VALUES (2, 'Series Two', '2021-12-17 23:12:05', 2);
-INSERT INTO `series` VALUES (3, 'Series Three', '2021-12-17 23:12:17', 1);
-INSERT INTO `series` VALUES (4, 'Series Four ', '2021-12-18 23:12:27', 1);
-INSERT INTO `series` VALUES (5, 'Series Five', '2021-12-13 23:12:37', 1);
+INSERT INTO `series` VALUES (1, 'Series one', '2021-12-15 01:10:40', 1);
+INSERT INTO `series` VALUES (2, 'Series two', '2021-12-16 01:10:49', 1);
+INSERT INTO `series` VALUES (3, 'Series three', '2021-12-17 01:11:19', 1);
+INSERT INTO `series` VALUES (4, 'Series four', '2021-12-20 01:11:30', 2);
 
 -- ----------------------------
 -- Table structure for studies
@@ -199,12 +193,13 @@ CREATE TABLE `studies`  (
   `study_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `created_date` datetime NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of studies
 -- ----------------------------
-INSERT INTO `studies` VALUES (1, 'Study One', '2021-12-15 23:10:17');
-INSERT INTO `studies` VALUES (2, 'Study Two', '2021-12-16 23:10:25');
+INSERT INTO `studies` VALUES (1, 'study one', '2021-12-20 01:08:02');
+INSERT INTO `studies` VALUES (2, 'study two', '2021-12-20 01:08:13');
+INSERT INTO `studies` VALUES (3, 'study three', '2021-12-20 01:09:16');
 
 SET FOREIGN_KEY_CHECKS = 1;

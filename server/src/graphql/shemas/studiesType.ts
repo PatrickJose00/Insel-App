@@ -13,6 +13,7 @@ const studiesType = gql`
   }
   type Mutation {
     createStudy(study_name: String!, created_date: String!) : Studies!
+    deleteStudy(id: Int!) : Int!
   }
 `;
 

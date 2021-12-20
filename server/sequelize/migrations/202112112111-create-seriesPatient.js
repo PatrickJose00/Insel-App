@@ -15,7 +15,7 @@ module.exports.up = (queryInterface, DataTypes) => {
         patient_id: {
             allowNull: false,
             references: {
-              model: 'studies',
+              model: 'patient',
               key: 'id'
             },
             type: DataTypes.INTEGER.UNSIGNED
